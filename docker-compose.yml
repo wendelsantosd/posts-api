@@ -1,0 +1,51 @@
+version: '3.9'
+services:
+  posts-api:
+    container_name: posts-api-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:      
+      - .:/usr/src/app
+    ports:
+      - '${PORT}:${PORT}'
+      - '9229:9229'
+    networks:
+      - posts-net
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
+    # START CONTAINER IN DEBUG MODE
+    command: yarn start:debug
+
+  postgres:
+    image: postgres:latest
+    container_name: 'postgres-posts'
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./.docker/db/postgres:/var/lib/postgresql/data
+    networks:
+      - posts-net
+    environment:      
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGDATA=/data/postgres
+  
+  redis:
+    image: redis:latest
+    container_name: 'redis-posts'
+    ports:
+      - '6379:6379'
+    volumes:
+      - ./.docker/db/redis:/data/db
+    networks:
+      - posts-net
+      
+networks:
+  posts-net:
+    name: posts-net
+    driver: bridge

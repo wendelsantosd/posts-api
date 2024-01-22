@@ -39,3 +39,6 @@ lerna-debug.log*
 
 #Migrations
 /prisma/migrations
+
+#Docker
+.docker

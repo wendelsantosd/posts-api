@@ -1,11 +1,10 @@
 import { Category } from '@modules/category/domain/model/category.aggregate';
 import { ICategoryRepository } from '@modules/category/domain/model/category.repository';
 import { AdapterCategoryDBOToDomain } from '@modules/category/infra/adapters/category.adapter';
+import { CreateCategoryDTO } from '@modules/category/infra/api/dtos/createCategory.dto';
 import { IUseCase, Result } from 'types-ddd';
 
-type Request = {
-  name: string;
-};
+type Request = CreateCategoryDTO;
 
 type Response = Category;
 

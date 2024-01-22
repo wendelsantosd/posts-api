@@ -3,11 +3,11 @@ import { MakeFindUserByEmail } from '@modules/user/application/factories/makeFin
 import { User } from '@modules/user/domain/user.aggregate';
 import { Injectable } from '@nestjs/common';
 import { Result } from 'types-ddd';
-import { createUserDTO } from './dtos/createUser.dto';
+import { CreateUserDTO } from './dtos/createUser.dto';
 
 @Injectable()
 export class UserService {
-  async create(data: createUserDTO): Promise<Result<User>> {
+  async create(data: CreateUserDTO): Promise<Result<User>> {
     const makeCreateUser = MakeCreateUser.getCreateUserUseCase();
 
     const user = await makeCreateUser.execute(data);

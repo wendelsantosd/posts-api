@@ -1,10 +1,10 @@
 import { User } from '@modules/user/domain/user.aggregate';
 import { IUserRepository } from '@modules/user/domain/user.repository';
 import { AdapterUserDBOToDomain } from '@modules/user/infra/adapters/user.adapter';
-import { createUserDTO } from '@modules/user/infra/api/dtos/createUser.dto';
+import { CreateUserDTO } from '@modules/user/infra/api/dtos/createUser.dto';
 import { IUseCase, Result } from 'types-ddd';
 
-type Request = createUserDTO;
+type Request = CreateUserDTO;
 
 type Response = User;
 

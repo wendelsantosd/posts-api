@@ -9,7 +9,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { UserPresenter } from '../presenters/user.presenter';
-import { createUserDTO } from './dtos/createUser.dto';
+import { CreateUserDTO } from './dtos/createUser.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -18,7 +18,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  async createUser(@Body() data: createUserDTO, @Res() response: Response) {
+  async createUser(@Body() data: CreateUserDTO, @Res() response: Response) {
     const result = await this.userService.create(data);
 
     if (result.isFail())

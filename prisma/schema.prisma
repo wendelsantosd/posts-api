@@ -21,16 +21,16 @@ model users {
 }
 
 model posts {
-  id           String      @id @unique @default(uuid())
-  title        String
-  content      String
-  image        String
-  users        users?      @relation(fields: [usersId], references: [id])
-  usersId      String?
-  categories   categories? @relation(fields: [categoriesId], references: [id])
-  categoriesId String?
-  createdAt    DateTime?   @default(now())
-  updatedAt    DateTime?   @updatedAt
+  id         String      @id @unique @default(uuid())
+  title      String
+  content    String
+  image      String
+  user       users?      @relation(fields: [userId], references: [id])
+  userId     String?
+  category   categories? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+  createdAt  DateTime?   @default(now())
+  updatedAt  DateTime?   @updatedAt
 }
 
 model categories {

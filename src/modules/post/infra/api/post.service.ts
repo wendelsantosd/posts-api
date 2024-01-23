@@ -1,10 +1,11 @@
 import { MakeCreatePost } from '@modules/post/application/factories/makeCreatePost.factory';
-import { MakeListAllPosts } from '@modules/post/application/factories/makeListAllPosts.factory';
+import { MakeListPosts } from '@modules/post/application/factories/makeListPosts.factory';
 import { Post } from '@modules/post/domain/model/post.aggregate';
 import { Posts } from '@modules/post/domain/model/post.repository';
 import { Injectable } from '@nestjs/common';
 import { Result } from 'types-ddd';
 import { CreatePostDTO } from './dtos/createPost.dto';
+import { ListParams } from './dtos/listPosts.dto';
 
 @Injectable()
 export class PostService {
@@ -22,10 +23,10 @@ export class PostService {
     return user;
   }
 
-  async list(): Promise<Result<Posts>> {
-    const makeListAllPosts = MakeListAllPosts.getListAllPostsUseCase();
+  async list(params: ListParams): Promise<Result<Posts>> {
+    const makeListAllPosts = MakeListPosts.getListPostsUseCase();
 
-    const posts = await makeListAllPosts.execute();
+    const posts = await makeListAllPosts.execute({ params });
 
     if (posts.isFail()) return Result.fail(posts.error());
 

@@ -1,7 +1,7 @@
 import { Post } from '@modules/post/domain/model/post.aggregate';
 import {
   IPostRepository,
-  ListAllPostsParams,
+  ListPostsParams,
   Posts,
 } from '@modules/post/domain/model/post.repository';
 import { PrismaService } from '@shared/infra/db/prisma.service';
@@ -36,13 +36,19 @@ export class PostRepository implements IPostRepository {
     }
   }
 
-  async listAll(params: ListAllPostsParams): Promise<Result<Posts>> {
+  async list(params: ListPostsParams): Promise<Result<Posts>> {
     try {
       const adapterPost = new AdapterPostDBOToDomain();
+      console.log(params);
 
-      const postsDB = await this.prisma.posts.findMany();
-
-      const count = await this.prisma.posts.count();
+      const postsDB = await this.prisma.posts.findMany({
+        where: {
+          categoryId: params.categoryId,
+          userId: params.userId,
+        },
+        skip: +params.skip || 0,
+        take: +params.take || 10,
+      });
 
       const preparedPosts = postsDB.map((post) => adapterPost.prepare(post));
 
@@ -57,7 +63,7 @@ export class PostRepository implements IPostRepository {
       return Result.Ok({
         posts: buildedPosts as Post[],
         metadata: {
-          count,
+          count: postsDB.length,
         },
       });
     } catch (error) {

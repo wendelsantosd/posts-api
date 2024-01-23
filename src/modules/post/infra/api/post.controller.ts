@@ -6,6 +6,7 @@ import {
   HttpStatus,
   ParseFilePipe,
   Post,
+  Query,
   Req,
   Res,
   UploadedFile,
@@ -20,6 +21,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { PostPresenter, PostsPresenter } from '../presenters/post.presenter';
+import { ListParams } from './dtos/listPosts.dto';
 
 export interface User {
   id: string;
@@ -74,8 +76,8 @@ export class PostController {
   }
 
   @Get()
-  async listPosts(@Res() response: Response) {
-    const result = await this.postService.list();
+  async listPosts(@Query() params: ListParams, @Res() response: Response) {
+    const result = await this.postService.list(params);
 
     if (result.isFail())
       return response.status(HttpStatus.BAD_REQUEST).json({

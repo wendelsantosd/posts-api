@@ -8,7 +8,7 @@ export type Posts = {
   };
 };
 
-export type ListAllPostsParams = {
+export type ListPostsParams = {
   skip?: number;
   take?: number;
   categoryId?: string;
@@ -17,5 +17,5 @@ export type ListAllPostsParams = {
 
 export interface IPostRepository {
   save(post: Post): Promise<Result<Post>>;
-  listAll(params: ListAllPostsParams): Promise<Result<Posts>>;
+  list(params: ListPostsParams): Promise<Result<Posts>>;
 }

@@ -1,4 +1,5 @@
 import { MakeCreatePost } from '@modules/post/application/factories/makeCreatePost.factory';
+import { MakeFlushCachePost } from '@modules/post/application/factories/makeFLushCachePost.factory';
 import { MakeListPosts } from '@modules/post/application/factories/makeListPosts.factory';
 import { Post } from '@modules/post/domain/model/post.aggregate';
 import { Posts } from '@modules/post/domain/model/post.repository';
@@ -31,5 +32,15 @@ export class PostService {
     if (posts.isFail()) return Result.fail(posts.error());
 
     return posts;
+  }
+
+  async flush(): Promise<Result<string>> {
+    const makeFlushCachePost = MakeFlushCachePost.getFlushCachePostUseCase();
+
+    const message = await makeFlushCachePost.execute();
+
+    if (message.isFail()) return Result.fail(message.error());
+
+    return message;
   }
 }

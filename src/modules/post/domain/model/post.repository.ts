@@ -18,4 +18,5 @@ export type ListPostsParams = {
 export interface IPostRepository {
   save(post: Post): Promise<Result<Post>>;
   list(params: ListPostsParams): Promise<Result<Posts>>;
+  flushCache(): Promise<Result<string>>;
 }

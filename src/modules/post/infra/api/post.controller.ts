@@ -88,4 +88,18 @@ export class PostController {
       .status(HttpStatus.OK)
       .json(new PostsPresenter().toPresenter(result.value()));
   }
+
+  @Get('/flushCache')
+  async flushCache(@Res() response: Response) {
+    const result = await this.postService.flush();
+
+    if (result.isFail())
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        message: result.error(),
+      });
+
+    return response.status(HttpStatus.OK).json({
+      message: result.value(),
+    });
+  }
 }

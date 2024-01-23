@@ -169,4 +169,14 @@ export class PostRepository implements IPostRepository {
       );
     }
   }
+
+  async flushCache(): Promise<Result<string>> {
+    try {
+      await this.redis.flushdb();
+
+      return Result.Ok('O cache foi liberado.');
+    } catch (error) {
+      return Result.fail(`Houve um erro ao liberar o cache: ${error.message}`);
+    }
+  }
 }

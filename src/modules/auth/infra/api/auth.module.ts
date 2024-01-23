@@ -3,6 +3,7 @@ import { UserService } from '@modules/user/infra/api/user.service';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { jwt } from '@shared/config/env/jwt';
 import BCryptProvider from '@shared/providers/encryptation/implementations/bcrypt';
 import EncryptationProvider from '@shared/providers/encryptation/model/encryptation-provider.abstract';
 import { AuthController } from './auth.controller';
@@ -15,8 +16,8 @@ import { LocalStrategy } from './strategies/strategy.local';
     UserModule,
     PassportModule,
     JwtModule.register({
-      privateKey: process.env.JWT_SECRET_KEY,
-      signOptions: { expiresIn: '10y' },
+      privateKey: jwt.secretKey,
+      signOptions: { expiresIn: jwt.expiresIn },
     }),
   ],
   controllers: [AuthController],

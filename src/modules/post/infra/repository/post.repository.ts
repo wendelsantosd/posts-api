@@ -5,6 +5,7 @@ import {
   Posts,
 } from '@modules/post/domain/model/post.repository';
 import { posts } from '@prisma/client';
+import { redis } from '@shared/config/env/redis';
 import { PrismaService } from '@shared/infra/db/prisma.service';
 import { RedisService } from '@shared/infra/db/redis.service';
 import { Result } from 'types-ddd';
@@ -70,7 +71,7 @@ export class PostRepository implements IPostRepository {
             key,
             JSON.stringify(postsDB),
             'EX',
-            process.env.CACHE_TTL,
+            redis.cacheTTL,
           );
         } else {
           postsDB = JSON.parse(cachedPostsDB);
@@ -94,7 +95,7 @@ export class PostRepository implements IPostRepository {
             key,
             JSON.stringify(postsDB),
             'EX',
-            process.env.CACHE_TTL,
+            redis.cacheTTL,
           );
         } else {
           postsDB = JSON.parse(cachedPostsDB);
@@ -117,7 +118,7 @@ export class PostRepository implements IPostRepository {
             key,
             JSON.stringify(postsDB),
             'EX',
-            process.env.CACHE_TTL,
+            redis.cacheTTL,
           );
         } else {
           postsDB = JSON.parse(cachedPostsDB);
@@ -140,7 +141,7 @@ export class PostRepository implements IPostRepository {
             key,
             JSON.stringify(postsDB),
             'EX',
-            process.env.CACHE_TTL,
+            redis.cacheTTL,
           );
         } else {
           postsDB = JSON.parse(cachedPostsDB);

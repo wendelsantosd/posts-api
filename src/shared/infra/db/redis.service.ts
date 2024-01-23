@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { redis } from '@shared/config/env/redis';
 import { Redis } from 'ioredis';
 
 @Injectable()
 export class RedisService extends Redis {
   constructor() {
     super({
-      host: process.env.REDIS_HOST,
+      host: redis.host,
     });
 
     super.on('error', (err) => {

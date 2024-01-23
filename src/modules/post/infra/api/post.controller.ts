@@ -22,6 +22,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { PostPresenter, PostsPresenter } from '../presenters/post.presenter';
 import { ListParams } from './dtos/listPosts.dto';
+import { serveStatic } from '@shared/config/env/serveStatic';
 
 export interface User {
   id: string;
@@ -59,7 +60,7 @@ export class PostController {
     @Req() request: Request & { user: User },
     @Res() response: Response,
   ) {
-    const image = `${process.env.STATIC_SERVE_URL}/${file.filename}`;
+    const image = `${serveStatic.url}/${file.filename}`;
     const userId = request.user.id;
 
     const result = await this.postService.create(data, image, userId);

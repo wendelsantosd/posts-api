@@ -1,4 +1,5 @@
 import { Post } from '@modules/post/domain/model/post.aggregate';
+import { Posts } from '@modules/post/domain/model/post.repository';
 
 type PostPresenterResponse = {
   id: string;
@@ -10,16 +11,41 @@ type PostPresenterResponse = {
   updatedAt: Date;
 };
 
+type PostsPresenterResponse = {
+  posts: PostPresenterResponse[];
+  metadata: {
+    count: number;
+  };
+};
 export class PostPresenter {
-  public toPresenter(data: Post): PostPresenterResponse {
+  public toPresenter(post: Post): PostPresenterResponse {
     return {
-      id: data.id.value(),
-      title: data.title,
-      content: data.content,
-      categoryId: data.categoryId,
-      userId: data.userId,
-      createdAt: data.createdAt,
-      updatedAt: data.updatedAt,
+      id: post.id.value(),
+      title: post.title,
+      content: post.content,
+      categoryId: post.categoryId,
+      userId: post.userId,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+    };
+  }
+}
+
+export class PostsPresenter {
+  public toPresenter(data: Posts): PostsPresenterResponse {
+    const posts: PostPresenterResponse[] = data.posts.map((post) => ({
+      id: post.id.value(),
+      title: post.title,
+      content: post.content,
+      categoryId: post.categoryId,
+      userId: post.userId,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+    }));
+
+    return {
+      posts: posts,
+      metadata: { count: data.metadata.count },
     };
   }
 }

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   FileTypeValidator,
+  Get,
   HttpStatus,
   ParseFilePipe,
   Post,
@@ -18,7 +19,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { PostPresenter } from '../presenters/post.presenter';
+import { PostPresenter, PostsPresenter } from '../presenters/post.presenter';
 
 export interface User {
   id: string;
@@ -68,7 +69,21 @@ export class PostController {
 
     return response.status(HttpStatus.CREATED).json({
       message: 'Postagem criada com sucesso!',
-      user: new PostPresenter().toPresenter(result.value()),
+      post: new PostPresenter().toPresenter(result.value()),
     });
+  }
+
+  @Get()
+  async listPosts(@Res() response: Response) {
+    const result = await this.postService.list();
+
+    if (result.isFail())
+      return response.status(HttpStatus.BAD_REQUEST).json({
+        message: result.error(),
+      });
+
+    return response
+      .status(HttpStatus.OK)
+      .json(new PostsPresenter().toPresenter(result.value()));
   }
 }

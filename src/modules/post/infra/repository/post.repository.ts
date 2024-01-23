@@ -37,6 +37,33 @@ export class PostRepository implements IPostRepository {
   }
 
   async listAll(params: ListAllPostsParams): Promise<Result<Posts>> {
-    throw new Error('Method not implemented.');
+    try {
+      const adapterPost = new AdapterPostDBOToDomain();
+
+      const postsDB = await this.prisma.posts.findMany();
+
+      const count = await this.prisma.posts.count();
+
+      const preparedPosts = postsDB.map((post) => adapterPost.prepare(post));
+
+      const buildedPosts = preparedPosts.map((post) => {
+        const buildedPost = adapterPost.build(post);
+
+        if (buildedPost.isFail()) return Result.fail(buildedPost.error());
+
+        return buildedPost.value();
+      });
+
+      return Result.Ok({
+        posts: buildedPosts as Post[],
+        metadata: {
+          count,
+        },
+      });
+    } catch (error) {
+      return Result.fail(
+        `Houve um erro ao listar as postagens: ${error.message}`,
+      );
+    }
   }
 }

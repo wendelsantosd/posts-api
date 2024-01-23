@@ -1,15 +1,15 @@
 import { PostRepository } from '@modules/post/infra/repository/post.repository';
 import { PrismaService } from '@shared/infra/db/prisma.service';
-import { CreatePostUseCase } from '../useCases/createPost.useCase';
+import { ListAllPostsUseCase } from '../useCases/listAllPosts.useCase';
 
-export class MakeCreatePost {
-  private static instance: CreatePostUseCase;
+export class MakeListAllPosts {
+  private static instance: ListAllPostsUseCase;
 
   private constructor() {}
 
-  public static getCreatePostUseCase(): CreatePostUseCase {
+  public static getListAllPostsUseCase(): ListAllPostsUseCase {
     if (!this.instance)
-      this.instance = new CreatePostUseCase(
+      this.instance = new ListAllPostsUseCase(
         new PostRepository(new PrismaService()),
       );
 

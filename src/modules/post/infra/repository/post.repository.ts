@@ -39,7 +39,6 @@ export class PostRepository implements IPostRepository {
   async list(params: ListPostsParams): Promise<Result<Posts>> {
     try {
       const adapterPost = new AdapterPostDBOToDomain();
-      console.log(params);
 
       const postsDB = await this.prisma.posts.findMany({
         where: {

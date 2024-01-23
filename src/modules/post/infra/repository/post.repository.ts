@@ -44,29 +44,107 @@ export class PostRepository implements IPostRepository {
   async list(params: ListPostsParams): Promise<Result<Posts>> {
     try {
       let postsDB: posts[];
+      let cachedPostsDB: string;
+
+      const take = params.take ? +params.take : 10;
+      const skip = params.skip ? +params.skip : 0;
 
       const adapterPost = new AdapterPostDBOToDomain();
 
-      const cachedPostsDB = await this.redis.get('posts');
+      if (!params.categoryId && !params.userId) {
+        const key = `posts_take${take}_skip${skip}`;
 
-      if (!cachedPostsDB) {
-        postsDB = await this.prisma.posts.findMany({
-          where: {
-            categoryId: params.categoryId,
-            userId: params.userId,
-          },
-          skip: +params.skip || 0,
-          take: +params.take || 10,
-        });
+        cachedPostsDB = await this.redis.get(key);
 
-        await this.redis.set(
-          'posts',
-          JSON.stringify(postsDB),
-          'EX',
-          process.env.CACHE_TTL,
-        );
-      } else {
-        postsDB = JSON.parse(cachedPostsDB);
+        if (!cachedPostsDB) {
+          postsDB = await this.prisma.posts.findMany({
+            where: {
+              categoryId: params.categoryId,
+              userId: params.userId,
+            },
+            skip,
+            take,
+          });
+
+          await this.redis.set(
+            key,
+            JSON.stringify(postsDB),
+            'EX',
+            process.env.CACHE_TTL,
+          );
+        } else {
+          postsDB = JSON.parse(cachedPostsDB);
+        }
+      } else if (params.categoryId && params.userId) {
+        const key = `posts_categoryId_userId_take${take}_skip${skip}`;
+
+        cachedPostsDB = await this.redis.get(key);
+
+        if (!cachedPostsDB) {
+          postsDB = await this.prisma.posts.findMany({
+            where: {
+              categoryId: params.categoryId,
+              userId: params.userId,
+            },
+            skip,
+            take,
+          });
+
+          await this.redis.set(
+            key,
+            JSON.stringify(postsDB),
+            'EX',
+            process.env.CACHE_TTL,
+          );
+        } else {
+          postsDB = JSON.parse(cachedPostsDB);
+        }
+      } else if (params.categoryId) {
+        const key = `posts_categoryId_take${take}_skip${skip}`;
+
+        cachedPostsDB = await this.redis.get(key);
+
+        if (!cachedPostsDB) {
+          postsDB = await this.prisma.posts.findMany({
+            where: {
+              categoryId: params.categoryId,
+            },
+            skip,
+            take,
+          });
+
+          await this.redis.set(
+            key,
+            JSON.stringify(postsDB),
+            'EX',
+            process.env.CACHE_TTL,
+          );
+        } else {
+          postsDB = JSON.parse(cachedPostsDB);
+        }
+      } else if (params.userId) {
+        const key = `posts_userId_take${take}_skip${skip}`;
+
+        cachedPostsDB = await this.redis.get(key);
+
+        if (!cachedPostsDB) {
+          postsDB = await this.prisma.posts.findMany({
+            where: {
+              userId: params.userId,
+            },
+            skip,
+            take,
+          });
+
+          await this.redis.set(
+            key,
+            JSON.stringify(postsDB),
+            'EX',
+            process.env.CACHE_TTL,
+          );
+        } else {
+          postsDB = JSON.parse(cachedPostsDB);
+        }
       }
 
       const preparedPosts = postsDB.map((post) => adapterPost.prepare(post));

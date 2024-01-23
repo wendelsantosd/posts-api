@@ -13,9 +13,5 @@ export class RedisService extends Redis {
       console.log(err);
       process.exit(1);
     });
-
-    super.on('connect', () => {
-      console.log('Redis connected!');
-    });
   }
 }

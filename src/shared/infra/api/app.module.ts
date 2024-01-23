@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { PrismaModule } from './prisma.module';
+import { RedisModule } from './redis.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { PrismaModule } from './prisma.module';
     AuthModule,
     CategoryModule,
     PostModule,
+    RedisModule,
   ],
   controllers: [],
   providers: [],

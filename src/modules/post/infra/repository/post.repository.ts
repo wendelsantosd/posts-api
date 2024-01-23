@@ -4,13 +4,18 @@ import {
   ListPostsParams,
   Posts,
 } from '@modules/post/domain/model/post.repository';
+import { posts } from '@prisma/client';
 import { PrismaService } from '@shared/infra/db/prisma.service';
+import { RedisService } from '@shared/infra/db/redis.service';
 import { Result } from 'types-ddd';
 import { AdapterPostDBOToDomain } from '../adapters/post.adapter';
 import { PostDBO } from './post.dbo';
 
 export class PostRepository implements IPostRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly redis: RedisService,
+  ) {}
 
   async save(post: Post): Promise<Result<Post>> {
     try {
@@ -38,16 +43,31 @@ export class PostRepository implements IPostRepository {
 
   async list(params: ListPostsParams): Promise<Result<Posts>> {
     try {
+      let postsDB: posts[];
+
       const adapterPost = new AdapterPostDBOToDomain();
 
-      const postsDB = await this.prisma.posts.findMany({
-        where: {
-          categoryId: params.categoryId,
-          userId: params.userId,
-        },
-        skip: +params.skip || 0,
-        take: +params.take || 10,
-      });
+      const cachedPostsDB = await this.redis.get('posts');
+
+      if (!cachedPostsDB) {
+        postsDB = await this.prisma.posts.findMany({
+          where: {
+            categoryId: params.categoryId,
+            userId: params.userId,
+          },
+          skip: +params.skip || 0,
+          take: +params.take || 10,
+        });
+
+        await this.redis.set(
+          'posts',
+          JSON.stringify(postsDB),
+          'EX',
+          process.env.CACHE_TTL,
+        );
+      } else {
+        postsDB = JSON.parse(cachedPostsDB);
+      }
 
       const preparedPosts = postsDB.map((post) => adapterPost.prepare(post));
 

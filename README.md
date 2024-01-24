@@ -63,35 +63,35 @@ Para acompanhar o log da aplicação
 1. Criar usuário
 
 ```shell
-POST
-```
-
-```shell
 /user
 ```
 
 ```shell
+POST
+```
+
+```shell
 body: {
-    name: string,
-    email: string,
-    password: string
+    name: string;
+    email: string;
+    password: string;
 }
 ```
 
 2. Login
 
 ```shell
-POST
-```
-
-```shell
 /auth
 ```
 
 ```shell
+POST
+```
+
+```shell
 body: {
-    email: string,
-    password: string
+    email: string;
+    password: string;
 }
 ```
 
@@ -100,11 +100,11 @@ body: {
 1. Criar Categoria
 
 ```shell
-POST
+/category
 ```
 
 ```shell
-/category
+POST
 ```
 
 ```shell
@@ -115,18 +115,43 @@ headers: {
 
 ```shell
 body: {
-  name: string
+  name: string;
 }
 ```
 
-2. Listar Posts
-
-```shell
-GET
-```
+2. Criar Post
 
 ```shell
 /post
+```
+
+```shell
+POST
+```
+
+```shell
+headers: {
+  Authorization: "Bearer {{token}}"
+}
+```
+
+```shell
+form-data: {
+  file: File;
+  title: string;
+  content: string;
+  categoryId: string;
+}
+```
+
+3. Listar Posts
+
+```shell
+/post
+```
+
+```shell
+GET
 ```
 
 ```shell
@@ -137,14 +162,18 @@ headers: {
 
 ```shell
 params: {
-  take?: number,
-  skip?: number,
-  categoryId?: string,
-  userId?: string,
+  take?: number;
+  skip?: number;
+  categoryId?: string;
+  userId?: string;
 }
 ```
 
-3. Liberar Cache
+4. Liberar Cache
+
+```shell
+/post/flushCache
+```
 
 ```shell
 GET
@@ -154,10 +183,6 @@ GET
 headers: {
   Authorization: "Bearer {{token}}"
 }
-```
-
-```shell
-/post/flushCache
 ```
 
 # Contact us

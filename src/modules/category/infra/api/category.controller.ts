@@ -1,10 +1,12 @@
-import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { CategoryPresenter } from '../presenters/category.presenter';
 import { CategoryService } from './category.service';
 import { CreateCategoryDTO } from './dtos/createCategory.dto';
 
 @Controller('category')
+@UseGuards(AuthGuard('jwt'))
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 

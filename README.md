@@ -185,7 +185,7 @@ headers: {
 }
 ```
 
-# Contact us
+# Contato
 
 <p style="font-size: 18px;">
 Wendel Santos, 2024.

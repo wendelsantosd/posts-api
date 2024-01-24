@@ -18,7 +18,7 @@ Posts API
 
 A "Posts API" é uma aplicação que possibilita a criação de postagens associadas a um usuário e a uma categoria. Essa aplicação surgiu como resposta a um desafio proposto por uma empresa durante uma das etapas do processo seletivo. Foi desenvolvida utilizando Node.js com o framework Nest.js e Typescript, além de fazer uso de um banco de dados relacional PostgreSQL e do Redis para implementar um sistema de cache.
 
-# To Start the Application
+# Como iniciar a aplicação
 
 1. Clone o repositório:
 
@@ -58,7 +58,7 @@ Para acompanhar o log da aplicação
   yarn prisma:db:push
 ```
 
-# ROTAS PÚBLICAS
+# Rotas públicas
 
 1. Criar usuário
 
@@ -95,7 +95,7 @@ body: {
 }
 ```
 
-# ROTAS QUE EXIGEM AUTENTICAÇÃO
+# Rotas que exigem autenticação
 
 1. Criar Categoria
 
